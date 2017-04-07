@@ -1,3 +1,4 @@
+"""This file is practice for thinkBays book"""
 from BricksOfBayes import Pmf, Suite
 
 """1-Throwing a dice"""
@@ -51,6 +52,10 @@ class Cookie(Pmf):
     def Likelihood(self, data, hypo):
         mix = self.mixes[hypo]
         like = mix[data]
+        self.mixes = {
+        'Bowl 1': dict(vanilla=0.75, chocolate=0.25),
+        'Bowl 2': dict(vanilla=0.5, chocolate=0.5)
+       }
         return like
 
 
@@ -58,12 +63,15 @@ hypos = ['Bowl 1', 'Bowl 2']
 pmfCookies2 = Cookie(hypos)
 pmfCookies2.Update('vanilla')
 
+
 for hypo, prob in pmfCookies2.Items():
     print hypo, prob
 
 dataset = ['vanilla', 'chocolate', 'vanilla']
 for data in dataset:
     pmfCookies2.Update(data)
+
+print "PRINT WHEN UPDATE IS ['vanilla', 'chocolate', 'vanilla']"
 
 for hypo, prob in pmfCookies2.Items():
     print hypo, prob
@@ -115,5 +123,66 @@ class MontyHall(Suite):
 suite = MontyHall('ABC')
 suite.Update('B')
 suite.Print()
+
+
+"""The M&M PROBLEM"""
+
+
+
+class M_and_M(Suite):
+    mix94 = dict(brown=30,
+                 yellow=20,
+                 red=20,
+                 green=10,
+                 orange=10,
+                 tan=10)
+    mix96 = dict(blue=24,
+                 green=20,
+                 orange=16,
+                 yellow=14,
+                 red=13,
+                 brown=13)
+
+    hypoA = dict(bag1=mix94, bag2=mix96)
+    hypoB = dict(bag1=mix96, bag2=mix94)
+
+    hypotheses = dict(A=hypoA, B=hypoB)
+
+    def Likelihood(self, data, hypo):
+        bag, color = data
+        mix = self.hypotheses[hypo][bag]
+        like = mix[color]
+        return like
+
+
+suite = M_and_M('AB')
+suite.Update(('bag1', 'yellow'))
+suite.Update(('bag2', 'green'))
+suite.Print()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
